@@ -23,9 +23,7 @@ exports.appendComment = async (req, res) => {
         }
         connection.query('INSERT INTO comments SET ?', data, (err, res) => {
             connection.end();
-            console.log("opaaa");
             if (err) reject(err);
-            console.log("não deu erro!!");
             resolve({
                 message: "Adicionado com sucesso!"
             })
