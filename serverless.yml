@@ -36,6 +36,15 @@ functions:
           path: appendcomment
           method: post
           cors: true
+  speech:
+    handler: handler.speech
+    environment:
+      bucket: comment-api
+    events:
+      - http:
+          path: speech
+          method: post
+          cors: true
 
 # Create our resources with separate CloudFormation templates
 resources:
