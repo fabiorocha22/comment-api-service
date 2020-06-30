@@ -1,25 +1,60 @@
 "use strict";
-const { tagEvent } = require("./serverless_sdk");
 
-module.exports.hello = async event => {
-  tagEvent("custom-tag", "hello world", { custom: { tag: "data" } });
+var comment = require('./modules/comment');
 
-  return {
-    statusCode: 200,
-    headers: {
-      "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-      "Access-Control-Allow-Credentials": true // Required for cookies, authorization headers with HTTPS
-    },
-    body: JSON.stringify(
-      {
-        message: "Go Serverless v1.0! Your function executed successfully!",
-        input: event
-      },
-      null,
-      2
-    )
-  };
+module.exports.getAllComment = (event, context, callback) => {
+	comment.getAllComment()
+		.then((res) => {
+			console.log(res)
+			callback(null, {
+				'statusCode': 200,
+				'headers': {
+					'Content-Type': 'application/json; charset=utf-8',
+					'Access-Control-Allow-Origin' : '*',
+                    "Access-Control-Allow-Credentials" : true 
+				},
+				'isBase64Encoded': false,
+				'body': JSON.stringify(res)
+			})
+		})
+		.catch((err) => {
+			callback(null, {
+				'statusCode': 500,
+				'headers': {
+					'Content-Type': 'application/json; charset=utf-8',
+					'Access-Control-Allow-Origin' : '*',
+                    "Access-Control-Allow-Credentials" : true 
+				},
+				'isBase64Encoded': false,
+				'body': 'Error ::: ' + err
+			})
+		})
+}
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
-};
+module.exports.appendComment = (event, context, callback) => {
+	comment.appendComment(event)
+	.then((res) => {
+		callback(null, {
+			'statusCode': 200,
+			'headers': {
+				'Content-Type': 'application/json; charset=utf-8',
+				'Access-Control-Allow-Origin' : '*',
+				"Access-Control-Allow-Credentials" : true 
+			},
+			'isBase64Encoded': false,
+			'body': JSON.stringify(res)
+		})
+	})
+	.catch((err) => {
+		callback(null, {
+			'statusCode': 500,
+			'headers': {
+				'Content-Type': 'application/json; charset=utf-8',
+				'Access-Control-Allow-Origin' : '*',
+				"Access-Control-Allow-Credentials" : true 
+			},
+			'isBase64Encoded': false,
+			'body': 'Error ::: ' + err
+		})
+	})
+}
